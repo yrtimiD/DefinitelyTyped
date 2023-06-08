@@ -14,14 +14,15 @@ export {};
 type OutputBuffer = ArrayLike<number>;
 type InputBuffer = ArrayLike<number>;
 
-interface RandomOptions {
+type RandomOptions = {
     /** `Array` of 16 random bytes (0-255) */
     random?: InputBuffer | undefined;
-}
-interface RngOptions {
+    rng?: never;
+} | {
     /** Alternative to `options.random`, a `Function` that returns an `Array` of 16 random bytes (0-255) */
     rng?: (() => InputBuffer) | undefined;
-}
+    random?: never;
+};
 
 interface V1BaseOptions {
     /** RFC "node" field as an `Array[6]` of byte values (per 4.1.6) */
@@ -33,11 +34,9 @@ interface V1BaseOptions {
     /** RFC "timestamp" field (`Number` of nanoseconds to add to msecs, should be 0-10,000) */
     nsecs?: number | undefined;
 }
-interface V1RandomOptions extends V1BaseOptions, RandomOptions {}
-interface V1RngOptions extends V1BaseOptions, RngOptions {}
 
-export type V1Options = V1RandomOptions | V1RngOptions;
-export type V4Options = RandomOptions | RngOptions;
+export type V1Options = V1BaseOptions & RandomOptions;
+export type V4Options = RandomOptions;
 
 type v1String = (options?: V1Options) => string;
 type v1Buffer = <T extends OutputBuffer>(options: V1Options | null | undefined, buffer: T, offset?: number) => T;

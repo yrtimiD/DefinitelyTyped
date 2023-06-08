@@ -37,6 +37,13 @@ stringv1 = uuidv1({
     rng: () => randoms,
 });
 
+// can't have both rng and random
+// @ts-expect-error
+const v1OptionsRngRandom: V1Options = {
+    rng: () => randoms,
+    random: randoms,
+};
+
 const v1Options: V1Options = {
     msecs: new Date('2011-11-01').getTime(),
     nsecs: 5678,
